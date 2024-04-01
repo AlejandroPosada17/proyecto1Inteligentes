@@ -1,0 +1,8 @@
+{
+  "mapa": [
+    [ [0,5, false, [false,"dobleVia", false,"sale"]], [0,5, false,[false,"dobleVia", false,"sale"]] ],
+    [ [0,6, false, ["dobleVia","entra", false,"sale"]], [0,5, false,[false,"dobleVia", false,"sale"]] ],
+    [ [0,5, false, ["sale",false, false,"sale"]], [0,5, false,[false,"dobleVia", false,"sale"]] ]
+  ]
+}
+
