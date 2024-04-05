@@ -1,10 +1,10 @@
 import json
 import heapq
-from Rutas import Rutas
+from clases.Rutas import Rutas
 
 
 # Cargar los datos del JSON
-with open('matrizEjemplo2.json', 'r') as file:
+with open('matriz/matrizEjemplo2.json', 'r') as file:
     datos = json.load(file)
 
 # Obtener la matriz del mapa

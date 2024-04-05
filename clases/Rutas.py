@@ -1,5 +1,5 @@
 import heapq
-from nodoAestrella import Nodo
+from clases.nodoAestrella import Nodo
 
 class Rutas:
 
