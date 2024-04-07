@@ -1,8 +1,8 @@
 {
   "mapa": [
-    [[0,5, false, [false,"dobleVia", false,"sale"]],  [0,5, false,[false,"dobleVia", "entra","sale"]], [0,5, false,[false,false, "entra","sale"]], [0,5, false,[false,"sale", "entra",false]]],
-    [[0,5, false, ["dobleVia","dobleVia", false,false]],  [0,5, false,["dobleVia","sale", false,"entra"]],[0,5, false,[false,false, "sale","entra"]], [0,5, false,["entra","sale", "sale",false]]],
-    [[0,5, false, ["dobleVia","entra", false,"sale"]],[0,5, false,["entra","sale", "entra","sale"]],[0,5, false,[false,false, "entra","sale"]], [0,5, false,["entra","sale", "entra",false]]],
-    [[0,5, false, ["sale",false, false,"entra"]],  [0,5, false,["entra",false, "sale","entra"]], [0,5, false,[false,false, "sale","entra"]], [0,5, false,["entra",false, "sale",false]]]
+    [[0,false, false, [false,"dobleVia", false,"sale"]],  [0,false, false,[false,"dobleVia", "entra","sale"]], [0,false, false,[false,false, "entra","sale"]], [0,false, false,[false,"sale", "entra",false]]],
+    [[0,10, false, ["dobleVia","dobleVia", false,false]],  [0,false, false,["dobleVia","sale", false,"entra"]],[0,false, false,[false,false, "sale","entra"]], [0,false, false,["entra","sale", "sale",false]]],
+    [[0,false, false, ["dobleVia","entra", false,"sale"]],[0,false, false,["entra","sale", "entra","sale"]],[0,false, false,[false,false, "entra","sale"]], [0,false, false,["entra","sale", "entra",false]]],
+    [[0,false, false, ["sale",false, false,"entra"]],  [0,false, false,["entra",false, "sale","entra"]], [0,false, false,[false,false, "sale","entra"]], [0,false, false,["entra",false, "sale",false]]]
   ]
 }

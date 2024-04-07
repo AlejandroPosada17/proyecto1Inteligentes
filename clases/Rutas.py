@@ -17,7 +17,10 @@ class Rutas:
             candidatos.append((nodo.x+m[0],nodo.y+m[1]))
         return candidatos
         
-    def heuristica(self, nodo, destino):
+    def heuristica(self, nodo:Nodo, destino:Nodo):         
+
+        
+    
         return abs(nodo.x - destino.x) + abs(nodo.y - destino.y)
 
     def es_valido(self, x,y):
@@ -26,7 +29,7 @@ class Rutas:
     def es_viable(self,x,y):
         return self.L[x][y][0] == 0
 
-    def astar(self):
+    def astar(self, semaforizacion):
         
         lst_abiertos = []
         lst_cerrados = set()
@@ -66,8 +69,21 @@ class Rutas:
                     if self.L[x][y][3][adyacencias_nodo_candidato] in ["dobleVia", "entra"]:
 
                         if self.es_valido(x,y) and self.es_viable(x,y) and (x, y) not in lst_cerrados:
-                            nodo_candidato = Nodo(x, y, nodo_actual)
-                            nodo_candidato.g = nodo_actual.g + 1
+
+                            if semaforizacion:
+                                valor_semaforo = 0
+                                if self.L[x][y][1] == False:
+                                    valor_semaforo = 0
+                                else:
+                                    valor_semaforo = self.L[x][y][1]
+
+                                # Modificar el cálculo del costo del movimiento para incluir el costo del semáforo
+                                costo_movimiento = nodo_actual.g + 1 + valor_semaforo  # 1 es el costo base del movimiento
+                                nodo_candidato = Nodo(x, y, nodo_actual, valor_semaforo)  # Pasar el costo del semáforo como parámetro
+                                nodo_candidato.g = costo_movimiento
+                            else:
+                                nodo_candidato = Nodo(x, y, nodo_actual)
+                                nodo_candidato.g = nodo_actual.g + 1
 
                             #Distancia a destino sin ir diagonalmente
                             nodo_candidato.h = self.heuristica(nodo_candidato, nodo_destino)

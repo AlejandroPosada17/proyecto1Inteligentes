@@ -12,11 +12,11 @@ mapa = datos["mapa"]
 
 
 inicio = (0, 0)
-destino = (3, 0)
+destino = (2, 1)
 
 rutaMapa = Rutas(mapa, inicio, destino)
 
-camino_encontrado = rutaMapa.astar()
+camino_encontrado = rutaMapa.astar(True)
 
 if camino_encontrado:
     print("Camino encontrado:", camino_encontrado)
