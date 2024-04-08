@@ -59,6 +59,8 @@ for reporte in vehiculo.reportes:
 """
 1. Tiempo
 2. Cll - carr
-3. Algoritmo todas las rutas posibles
-4. algoritmo 4
+3. costo vehiculo
+4. Algoritmo todas las rutas posibles
+5. algoritmo 4
+
 """
