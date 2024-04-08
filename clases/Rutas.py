@@ -67,11 +67,11 @@ class Rutas:
 
                 carreras, calles = self.sumar_carreras_calles(ruta)
 
-                self.distancia = len(ruta)
+                self.distancia = len(ruta) - 1
                 cantidad_calles = calles
                 cantidad_carreras = carreras
-                tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1])
-                reporte = Reporte(self.vehiculo.costo_total *self.distancia,self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
+                tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1]) + self.distancia
+                reporte = Reporte(self.vehiculo.costo_total * tiempo,self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
                 self.vehiculo.reportes.append(reporte)
 
                 #print("Reporte acumulado")
@@ -142,13 +142,13 @@ class Rutas:
                 ruta = camino[::-1]
 
                 carreras, calles = self.sumar_carreras_calles(ruta)
-                self.distancia = len(ruta)
+                self.distancia = len(ruta) -1
                 cantidad_calles = calles
                 cantidad_carreras = carreras
-                tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1])
+                tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1]) + self.distancia
 
                 #Reporte
-                reporte = Reporte(self.vehiculo.costo_total *self.distancia,self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
+                reporte = Reporte(self.vehiculo.costo_total * (tiempo),self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
                 self.vehiculo.reportes.append(reporte)
                 self.todas_rutas_posibles()
                 #self.vehiculo.reportar_viaje(self.distancia / self.vehiculo.eficiencia_combustible, cantidad_calles, cantidad_carreras, tiempo)

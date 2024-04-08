@@ -20,7 +20,7 @@ tourTrip = [(i, j) for i, fila in enumerate(mapa) for j, elemento in enumerate(f
 inicio = (0, 0)
 destino = (2,1)
 
-tipoRuta = 3
+tipoRuta = 2
 
 def distancia_puntos(punto1, punto2):
     return math.sqrt((punto1[0] - punto2[0])**2 + (punto1[1] - punto2[1])**2)
