@@ -37,6 +37,9 @@ class Rutas:
         return self.L[x][y][0] == 0
 
     def astar(self, semaforizacion):
+
+        calles=0
+        carreras=0
         
         lst_abiertos = []
         lst_cerrados = set()
@@ -61,14 +64,18 @@ class Rutas:
 
                 
                 ruta = camino[::-1]
+
+                carreras, calles = self.sumar_carreras_calles(ruta)
+
                 self.distancia = len(ruta)
-                cantidad_calles = self.distancia
-                cantidad_carreras = self.distancia
+                cantidad_calles = calles
+                cantidad_carreras = carreras
                 tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1])
-                reporte = Reporte(self.vehiculo.costo_total *self.distancia,cantidad_carreras,cantidad_calles,tiempo)
+                reporte = Reporte(self.vehiculo.costo_total *self.distancia,self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
                 self.vehiculo.reportes.append(reporte)
 
-                self.vehiculo.reportar_viaje(self.distancia / self.vehiculo.eficiencia_combustible, cantidad_calles, cantidad_carreras, tiempo)
+                #print("Reporte acumulado")
+                #self.vehiculo.reportar_viaje(self.distancia / self.vehiculo.eficiencia_combustible, cantidad_calles, cantidad_carreras, tiempo)
                     
                 return camino[::-1]
             
@@ -131,12 +138,20 @@ class Rutas:
                 while nodo_actual:
                     camino.append((nodo_actual.x, nodo_actual.y))
                     nodo_actual = nodo_actual.padre
+
                 ruta = camino[::-1]
+
+                carreras, calles = self.sumar_carreras_calles(ruta)
                 self.distancia = len(ruta)
-                cantidad_calles = self.distancia
-                cantidad_carreras = self.distancia
+                cantidad_calles = calles
+                cantidad_carreras = carreras
                 tiempo = sum(self.L[x][y][1] for x, y in ruta if self.L[x][y][1])
-                self.vehiculo.reportar_viaje(self.distancia / self.vehiculo.eficiencia_combustible, cantidad_calles, cantidad_carreras, tiempo)
+
+                #Reporte
+                reporte = Reporte(self.vehiculo.costo_total *self.distancia,self.distancia/self.vehiculo.eficiencia_combustible,cantidad_carreras,cantidad_calles,tiempo)
+                self.vehiculo.reportes.append(reporte)
+                self.todas_rutas_posibles()
+                #self.vehiculo.reportar_viaje(self.distancia / self.vehiculo.eficiencia_combustible, cantidad_calles, cantidad_carreras, tiempo)
                 return ruta
 
             candidatos = self.movimientos_posibles(nodo_actual)
@@ -150,8 +165,14 @@ class Rutas:
                     if self.L[x][y][3][adyacencias_nodo_candidato] in ["dobleVia", "entra"]:
                         if self.es_valido(x, y) and self.es_viable(x, y) and (x, y) not in lst_cerrados:
 
-                            nodo_candidato = Nodo(x, y, nodo_actual)
-                            nodo_candidato.g = nodo_actual.g + 1 / self.vehiculo.eficiencia_combustible
+                          
+                            
+
+                            # Modificar el cálculo del costo del movimiento para incluir el costo del semáforo
+                            costo_movimiento = nodo_actual.g + 1   # 1 es el costo base del movimiento
+                            nodo_candidato = Nodo(x, y, nodo_actual, 0)  # Pasar el costo del semáforo como parámetro
+                            nodo_candidato.g = costo_movimiento
+                         
 
                             nodo_candidato.h = self.heuristica(nodo_candidato, nodo_destino)
                             nodo_candidato.f = nodo_candidato.g + nodo_candidato.h
@@ -161,4 +182,63 @@ class Rutas:
                 direccion_posible_movimiento += 1
 
         return None
+    
+    def todas_rutas_posibles(self):
+        rutas = []
+        longitud_maxima = len(self.L) + len(self.L[0])  # Longitud máxima razonable
+        self.backtrack(self.inicio, [self.inicio], rutas, longitud_maxima)
+        for i, ruta in enumerate(rutas, start=1):
+                print(f"Ruta {i} {ruta}: Distancia: {len(ruta)}, Costo de combustible: {len(ruta)/self.vehiculo.eficiencia_combustible}")
+        return rutas
+
+    def backtrack(self, nodo, ruta_actual, rutas, longitud_maxima):
+        x, y = nodo
+
+        if nodo == self.final:
+            rutas.append(ruta_actual[:])
+            return
+
+        if len(ruta_actual) >= longitud_maxima:
+            return  # Poda: No explorar rutas demasiado largas
+
+        candidatos = self.movimientos_posibles(Nodo(x, y))
+        for c in candidatos:
+            cx, cy = c
+            if self.es_valido(cx, cy) and self.es_viable(cx, cy):
+                direccion_actual = self.obtener_direccion(nodo, (cx, cy))
+                if direccion_actual is not None:
+                    adyacencias_nodo_actual = self.L[x][y][3][direccion_actual]
+                    adyacencias_nodo_candidato = self.interaccion_adyacencia.get(direccion_actual)
+                    if (adyacencias_nodo_actual in ["dobleVia", "sale"] and
+                        self.L[cx][cy][3][adyacencias_nodo_candidato] in ["dobleVia", "entra"]):
+                        nueva_ruta = ruta_actual + [(cx, cy)]
+                        self.backtrack((cx, cy), nueva_ruta, rutas, longitud_maxima)
+
+    def obtener_direccion(self, nodo_actual, nodo_siguiente):
+        x1, y1 = nodo_actual
+        x2, y2 = nodo_siguiente
+        dx, dy = x2 - x1, y2 - y1
+        if dx == -1 and dy == 0:
+            return 0  # Arriba
+        elif dx == 1 and dy == 0:
+            return 1  # Abajo
+        elif dx == 0 and dy == -1:
+            return 2  # Izquierda
+        elif dx == 0 and dy == 1:
+            return 3  # Derecha
+        return None
+    
+
+    def sumar_carreras_calles(self,camino):
+        cambios_x = 0
+        cambios_y = 0
+
+        for i in range(len(camino) - 1):
+            x1, y1 = camino[i]
+            x2, y2 = camino[i + 1]
+            cambios_x += abs(x2 - x1)
+            cambios_y += abs(y2 - y1)
+
+        return cambios_x, cambios_y
+
 

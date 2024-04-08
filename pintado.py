@@ -20,13 +20,13 @@ def procesar_adyacencias(adyacencias):
     adyacencias_procesadas = []
     for adyacencia in adyacencias:
         if adyacencia == "dobleVia":
-            adyacencias_procesadas.append(True)
+            adyacencias_procesadas.append((True, "dobleVia"))
         elif adyacencia == "entra":
-            adyacencias_procesadas.append(1)
+            adyacencias_procesadas.append((True, "entra"))
         elif adyacencia == "sale":
-            adyacencias_procesadas.append(2)
+            adyacencias_procesadas.append((True, "sale"))
         else:
-            adyacencias_procesadas.append(False)
+            adyacencias_procesadas.append((False, None))
     return adyacencias_procesadas
 
 # Función para crear la matriz del mapa
@@ -66,14 +66,46 @@ def visualizar_ciudad(matriz):
 
             # Dibujar la calle y sus conexiones
             if transitable == 0:
-                if adyacencias[0]:  # Arriba
+                if adyacencias[0][0]:  # Arriba
                     ax.add_patch(plt.Rectangle((j + 0.2, i - 0.2), 0.6, 0.4, fill=True, edgecolor="black", facecolor=color_calle))
-                if adyacencias[1]:  # Abajo
+                    
+                    if adyacencias[0][1] == "dobleVia":
+                        ax.annotate("↕", xy=(j + 0.5, i - 0.1), ha="center", va="center", fontsize=22)
+                    elif adyacencias[0][1] == "entra":
+                        ax.annotate("↑", xy=(j + 0.5, i - 0.1), ha="center", va="center", fontsize=22)
+                    elif adyacencias[0][1] == "sale":
+                        ax.annotate("↓", xy=(j + 0.5, i - 0.1), ha="center", va="center", fontsize=22)
+                    
+                if adyacencias[1][0]:  # Abajo
                     ax.add_patch(plt.Rectangle((j + 0.2, i + 0.6), 0.6, 0.4, fill=True, edgecolor="black", facecolor=color_calle))
-                if adyacencias[2]:  # Izquierda
+
+                    if adyacencias[1][1] == "dobleVia":
+                        ax.annotate("↕", xy=(j + 0.5, i + 1.1), ha="center", va="center", fontsize=22)
+                    elif adyacencias[1][1] == "entra":
+                        ax.annotate("↓", xy=(j + 0.5, i + 1.1), ha="center", va="center", fontsize=22)
+                    elif adyacencias[1][1] == "sale":
+                        ax.annotate("↑", xy=(j + 0.5, i + 1.1), ha="center", va="center", fontsize=22)
+
+                if adyacencias[2][0]:  # Izquierda
                     ax.add_patch(plt.Rectangle((j - 0.2, i + 0.2), 0.4, 0.6, fill=True, edgecolor="black", facecolor=color_calle))
-                if adyacencias[3]:  # Derecha
+
+                    if adyacencias[2][1] == "dobleVia":
+                        ax.annotate("↔", xy=(j - 0.1, i + 0.5), ha="center", va="center", fontsize=22)
+                    elif adyacencias[2][1] == "entra":
+                        ax.annotate("→", xy=(j - 0.1, i + 0.5), ha="center", va="center", fontsize=22)
+                    elif adyacencias[2][1] == "sale":
+                        ax.annotate("←", xy=(j - 0.1, i + 0.5), ha="center", va="center", fontsize=22)
+                    
+                if adyacencias[3][0]:  # Derecha
                     ax.add_patch(plt.Rectangle((j + 0.6, i + 0.2), 0.4, 0.6, fill=True, edgecolor="black", facecolor=color_calle))
+
+                    if adyacencias[3][1] == "dobleVia":
+                        ax.annotate("↔", xy=(j + 1.1, i + 0.5), ha="center", va="center", fontsize=22)
+                    elif adyacencias[3][1] == "entra":
+                        ax.annotate("←", xy=(j + 1.1, i + 0.5), ha="center", va="center", fontsize=22)
+                    elif adyacencias[3][1] == "sale":
+                        ax.annotate("→", xy=(j + 1.1, i + 0.5), ha="center", va="center", fontsize=22)
+
 
                 # Dibujar la calle central
                 ax.add_patch(plt.Rectangle((j + 0.2, i + 0.2), 0.6, 0.6, fill=True, edgecolor="black", facecolor=color_calle))
