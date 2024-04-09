@@ -10,7 +10,7 @@ def load_json_file():
     uploaded_file = st.file_uploader("Selecciona un archivo JSON", type="json")
     if uploaded_file is not None:
         data = json.load(uploaded_file)
-        st.write(data)
+        #st.write(data)
         return data.get("mapa", [])  # Devuelve el mapa si está presente en los datos
     else:
         return []  # Devuelve una lista vacía si no se ha cargado ningún archivo
